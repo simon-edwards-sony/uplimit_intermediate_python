@@ -276,7 +276,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Choose from one of these : [tst|sml|bg]")
     parser.add_argument('--type',
                         default='tst',
-                        choices=['tst', 'sml', 'bg'],
+                        choices=['tst', 'sml', 'bg', 'all'],
                         help='Type of data to generate')
     args = parser.parse_args()
 
@@ -289,5 +289,14 @@ if __name__ == '__main__':
         sml()
 
     elif args.type == 'bg':
+        tqdm.write("Generating `big` data")
+        bg()
+    
+    elif args.type == 'all':
+        tqdm.write("Generating all datasets")
+        tqdm.write("Generating `test` data")
+        tst()
+        tqdm.write("Generating `small` data")
+        sml()
         tqdm.write("Generating `big` data")
         bg()
