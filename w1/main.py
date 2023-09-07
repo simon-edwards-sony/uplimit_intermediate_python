@@ -53,7 +53,8 @@ def revenue_per_region(dp: DataProcessor) -> Dict:
     # initialize the aggregate variable
     aggregate = dict()
 
-    aggregate = {row[constants.OutDataColNames.COUNTRY]: aggregate.get(row[constants.OutDataColNames.COUNTRY], 0.0) + float(row[constants.OutDataColNames.TOTAL_PRICE]) for row in tqdm(data_reader_gen)}
+    for row in data_reader_gen:
+        aggregate[row['Country']] = aggregate.get(row[constants.OutDataColNames.COUNTRY], 0.0) + float(row[constants.OutDataColNames.TOTAL_PRICE])
 
     return aggregate
     ######################################## YOUR CODE HERE ##################################################
