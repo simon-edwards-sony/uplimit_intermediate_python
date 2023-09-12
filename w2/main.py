@@ -63,7 +63,7 @@ def get_sales_information(file_path: str) -> Dict:
 # batches the files based on the number of processes
 def batch_files(file_paths: List[str], n_processes: int) -> List[set]:
     if n_processes > len(file_paths):
-        return []
+        return [{item} for item in file_paths]
 
     n_per_batch = len(file_paths) // n_processes
 
@@ -189,12 +189,11 @@ def main() -> List[Dict]:
 
         plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], year=yearly_data["file_name"],
                         plot_save_path=os.path.join(output_save_folder, f'{yearly_data["file_name"]}.png'))
-    
-    # should return revenue data
-    return list(revenue_data)
 
     ######################################## YOUR CODE HERE ##################################################
 
+    # should return revenue data
+    return list(revenue_data)
 
 if __name__ == '__main__':
     res = main()
