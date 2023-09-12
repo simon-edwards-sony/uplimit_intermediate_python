@@ -165,13 +165,24 @@ def main() -> List[Dict]:
 
     ######################################## YOUR CODE HERE ##################################################
 
+    with multiprocessing.Pool(processes=n_processes) as pool:
+
+        results = pool.starmap(run, [(batch, i) for i, batch in enumerate(batches)])
+
+        pool.close()
+        pool.join()
+
+        revenue_data = []
+        for result_set in results:
+            revenue_data.extend(result_set)
+        
     ######################################## YOUR CODE HERE ##################################################
 
     en = time.time()
     print("Overall time taken : {}".format(en-st))
 
     # should return revenue data
-    return [{}]
+    return list(revenue_data)
 
 
 if __name__ == '__main__':
