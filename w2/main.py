@@ -181,8 +181,19 @@ def main() -> List[Dict]:
     en = time.time()
     print("Overall time taken : {}".format(en-st))
 
+    ######################################## YOUR CODE HERE ##################################################
+    
+    for yearly_data in revenue_data:
+        with open(os.path.join(output_save_folder, f'{yearly_data["file_name"]}.json'), 'w') as f:
+            f.write(json.dumps(yearly_data))
+
+        plot_sales_data(yearly_revenue=yearly_data['revenue_per_region'], year=yearly_data["file_name"],
+                        plot_save_path=os.path.join(output_save_folder, f'{yearly_data["file_name"]}.png'))
+    
     # should return revenue data
     return list(revenue_data)
+
+    ######################################## YOUR CODE HERE ##################################################
 
 
 if __name__ == '__main__':
