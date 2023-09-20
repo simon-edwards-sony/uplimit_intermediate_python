@@ -28,7 +28,7 @@ class DB:
 
         return 0
 
-    def create_table(self) -> None:
+    def create_table(self) -> bool:
         """
         Create a table if it doesn't exist with the below schema
 
@@ -44,9 +44,32 @@ class DB:
 
         Read more about datatypes in Sqlite here -> https://www.sqlite.org/datatype3.html
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-    ######################################## YOUR CODE HERE ##################################################
+        cursor = self._connection.execute(f'''
+                                          SELECT name 
+                                          FROM sqlite_master 
+                                          WHERE type=\'table\' AND name=\'{self._table_name}\';''')
+
+        if not cursor.fetchone():
+            print(f'Table \'{self._table_name}\' already exists. Skipping table creation')
+            return False
+
+        cursor = self._connection.execute(f'''
+                                            CREATE TABLE \'{self._table_name}\'
+                                            (
+                                                process_id TEXT NOT NULL,
+                                                file_name TEXT DEFAULT NULL,
+                                                file_path TEXT DEFAULT NULL,
+                                                description TEXT DEFAULT NULL,
+                                                start_time TEXT NOT NULL,
+                                                end_time TEXT DEFAULT NULL,
+                                                percentage REAL DEFAULT NULL
+                                            );''')
+
+        return True
+
+        ### YOUR CODE HERE ###
 
     def insert(self, process_id, start_time, file_name=None, file_path=None,
                description=None, end_time=None, percentage=None) -> None:
@@ -62,9 +85,9 @@ class DB:
         :param percentage: Percentage of process completed
         :return: None
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ######################################## YOUR CODE HERE ##################################################
 
-    ######################################## YOUR CODE HERE ##################################################
+        ######################################## YOUR CODE HERE ##################################################
 
     def read_all(self) -> List[Dict]:
         data = []
@@ -94,8 +117,8 @@ class DB:
         :param percentage: Percentage of process completed
         :return: None
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ######################################## YOUR CODE HERE ##################################################
 
-    ######################################## YOUR CODE HERE ##################################################
+        ######################################## YOUR CODE HERE ##################################################
 
 
