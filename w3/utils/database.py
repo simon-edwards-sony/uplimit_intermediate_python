@@ -50,16 +50,17 @@ class DB:
         cursor = self._connection.execute(f'''
                                           SELECT name 
                                           FROM sqlite_master 
-                                          WHERE type=\'table\' AND name=\'{self._table_name}\';''')
+                                          WHERE type=\'table\' AND name=\'{self._table_name}\';
+                                          ''')
 
         # Exit the method if the table already exists
-        if not cursor.fetchone():
+        if cursor.fetchone() is not None:
             print(f'Table \'{self._table_name}\' already exists. Skipping table creation')
             return False
 
         # Create the table
         cursor = self._connection.execute(f'''
-                                            CREATE TABLE \'{self._table_name}\'
+                                            CREATE TABLE {self._table_name}
                                             (
                                                 process_id TEXT NOT NULL,
                                                 file_name TEXT DEFAULT NULL,
@@ -68,7 +69,11 @@ class DB:
                                                 start_time TEXT NOT NULL,
                                                 end_time TEXT DEFAULT NULL,
                                                 percentage REAL DEFAULT NULL
-                                            );''')
+                                            );
+                                            ''')
+
+        # Commit changes
+        self._connection.commit()
 
         return True
 
@@ -86,20 +91,23 @@ class DB:
         :param description: Description of the file/process
         :param end_time: End time for the process
         :param percentage: Percentage of process completed
-        :return: None
+        :return: bool
         """
         ### YOUR CODE HERE ###
 
         # Insert the data into the table
         cursor = self._connection.execute(f'''
-                                          INSERT INTO \'{self._table_name}\' (process_id, start_time, file_name, file_path, description, end_time, percentage)
-                                          VALUES (\'{process_id}\', \'{start_time}\', \'{file_name}\', \'{file_path}\', \'{description}\', \'{end_time}\', {percentage})
-                                          ;''')
+                                          INSERT INTO '{self._table_name}' (process_id, file_name, description, start_time, end_time, percentage)
+                                          VALUES (?, ?, ?, ?, ?, ?)
+                                          ;''', (process_id, file_name, description, start_time, end_time, percentage))
 
         # Return False on error
         if cursor.rowcount < 1:
-            print(f'Error inserting record into \'{self._table_name}\'')
+            print(f'Error inserting record into: \'{self._table_name}\' for file: \'{file_path}\'')
             return False
+
+        # Commit changes
+        self._connection.commit()
 
         return True
 
@@ -125,13 +133,13 @@ class DB:
 
         self._connection.commit()
 
-    def update_percentage(self, process_id, percentage):
+    def update_percentage(self, process_id, percentage) -> bool:
         """
         Update percentage in a record
 
         :param process_id: Assign an id to the process
         :param percentage: Percentage of process completed
-        :return: None
+        :return: bool
         """
         ### YOUR CODE HERE ###
 
@@ -146,6 +154,11 @@ class DB:
         if cursor.rowcount < 1:
             print('Error updating the percentage for the following process_id: \'{process_id}\' in table: \'{self._table_name}\'')
             return False
+
+        # Commit changes
+        self._connection.commit()
+
+        return True
 
         ### YOUR CODE HERE ###
 
