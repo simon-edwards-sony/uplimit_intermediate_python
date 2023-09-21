@@ -11,7 +11,6 @@ from w3.utils.database import DB
 
 app = FastAPI()
 manager = ConnectionManager()
-db = DB('db_test.sqlite')
 
 # start an asynchronous task that will keep broadcasting the process status to all the connected clients
 broadcast_continuous = Thread(target=asyncio.run, args=(manager.broadcast_all(),))
@@ -73,6 +72,9 @@ async def get() -> List[ProcessStatus]:
     Get all the records from the process table and return it using the pydantic model ProcessStatus
     """
     ######################################## YOUR CODE HERE ##################################################
+
+    # Get instance of db
+    db = DB('database.sqlite')
 
     # Get all processes from db
     processes = db.read_all()
