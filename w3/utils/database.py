@@ -98,7 +98,7 @@ class DB:
 
         # Return False on error
         if cursor.rowcount < 1:
-            print('Error inserting record into \'{self._table_name}\'')
+            print(f'Error inserting record into \'{self._table_name}\'')
             return False
 
         return True
@@ -134,6 +134,18 @@ class DB:
         :return: None
         """
         ### YOUR CODE HERE ###
+
+        # Update record in db
+        cursor = self._connection.execute(f'''
+                                          UPDATE \'{self._table_name}\'
+                                          SET percentage = {percentage}
+                                          WHERE process_id = \'{process_id}\'
+                                          ;''')
+
+        # Return False on error
+        if cursor.rowcount < 1:
+            print('Error updating the percentage for the following process_id: \'{process_id}\' in table: \'{self._table_name}\'')
+            return False
 
         ### YOUR CODE HERE ###
 
