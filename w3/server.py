@@ -11,6 +11,7 @@ from w3.utils.database import DB
 
 app = FastAPI()
 manager = ConnectionManager()
+db = DB('db_test.sqlite')
 
 # start an asynchronous task that will keep broadcasting the process status to all the connected clients
 broadcast_continuous = Thread(target=asyncio.run, args=(manager.broadcast_all(),))
@@ -56,8 +57,10 @@ async def get() -> HTMLResponse:
     """
     ######################################## YOUR CODE HERE ##################################################
 
+    # Open the index.html file for reading
     f = open("index.html", "r")
 
+    # Return the index.html content with an "OK" status code of 200
     return HTMLResponse(content=f.read(), status_code=200)
 
     ######################################## YOUR CODE HERE ##################################################
@@ -71,6 +74,10 @@ async def get() -> List[ProcessStatus]:
     """
     ######################################## YOUR CODE HERE ##################################################
 
-    return {}
+    # Get all processes from db
+    processes = db.read_all()
+
+    # Return the list of processes cast as the ProcessStatus class
+    return [ProcessStatus(**process) for process in processes]
 
     ######################################## YOUR CODE HERE ##################################################
