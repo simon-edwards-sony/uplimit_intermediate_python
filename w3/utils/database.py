@@ -46,15 +46,18 @@ class DB:
         """
         ### YOUR CODE HERE ###
 
+        # Check if the table exists
         cursor = self._connection.execute(f'''
                                           SELECT name 
                                           FROM sqlite_master 
                                           WHERE type=\'table\' AND name=\'{self._table_name}\';''')
 
+        # Exit the method if the table already exists
         if not cursor.fetchone():
             print(f'Table \'{self._table_name}\' already exists. Skipping table creation')
             return False
 
+        # Create the table
         cursor = self._connection.execute(f'''
                                             CREATE TABLE \'{self._table_name}\'
                                             (
@@ -72,7 +75,7 @@ class DB:
         ### YOUR CODE HERE ###
 
     def insert(self, process_id, start_time, file_name=None, file_path=None,
-               description=None, end_time=None, percentage=None) -> None:
+               description=None, end_time=None, percentage=None) -> bool:
         """
         Insert a record into the table
 
@@ -85,9 +88,22 @@ class DB:
         :param percentage: Percentage of process completed
         :return: None
         """
-        ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-        ######################################## YOUR CODE HERE ##################################################
+        # Insert the data into the table
+        cursor = self._connection.execute(f'''
+                                          INSERT INTO \'{self._table_name}\' (process_id, start_time, file_name, file_path, description, end_time, percentage)
+                                          VALUES (\'{process_id}\', \'{start_time}\', \'{file_name}\', \'{file_path}\', \'{description}\', \'{end_time}\', {percentage})
+                                          ;''')
+
+        # Return False on error
+        if cursor.rowcount < 1:
+            print('Error inserting record into \'{self._table_name}\'')
+            return False
+
+        return True
+
+        ### YOUR CODE HERE ###
 
     def read_all(self) -> List[Dict]:
         data = []
@@ -117,8 +133,8 @@ class DB:
         :param percentage: Percentage of process completed
         :return: None
         """
-        ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-        ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
 
