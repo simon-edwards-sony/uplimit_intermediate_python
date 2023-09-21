@@ -28,7 +28,7 @@ class DB:
 
         return 0
 
-    def create_table(self) -> None:
+    def create_table(self) -> bool:
         """
         Create a table if it doesn't exist with the below schema
 
@@ -44,12 +44,43 @@ class DB:
 
         Read more about datatypes in Sqlite here -> https://www.sqlite.org/datatype3.html
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-    ######################################## YOUR CODE HERE ##################################################
+        # Check if the table exists
+        cursor = self._connection.execute(f'''
+                                          SELECT name 
+                                          FROM sqlite_master 
+                                          WHERE type=\'table\' AND name=\'{self._table_name}\';
+                                          ''')
+
+        # Exit the method if the table already exists
+        if cursor.fetchone() is not None:
+            print(f'Table \'{self._table_name}\' already exists. Skipping table creation')
+            return False
+
+        # Create the table
+        cursor = self._connection.execute(f'''
+                                            CREATE TABLE {self._table_name}
+                                            (
+                                                process_id TEXT NOT NULL,
+                                                file_name TEXT DEFAULT NULL,
+                                                file_path TEXT DEFAULT NULL,
+                                                description TEXT DEFAULT NULL,
+                                                start_time TEXT NOT NULL,
+                                                end_time TEXT DEFAULT NULL,
+                                                percentage REAL DEFAULT NULL
+                                            );
+                                            ''')
+
+        # Commit changes
+        self._connection.commit()
+
+        return True
+
+        ### YOUR CODE HERE ###
 
     def insert(self, process_id, start_time, file_name=None, file_path=None,
-               description=None, end_time=None, percentage=None) -> None:
+               description=None, end_time=None, percentage=None) -> bool:
         """
         Insert a record into the table
 
@@ -60,11 +91,27 @@ class DB:
         :param description: Description of the file/process
         :param end_time: End time for the process
         :param percentage: Percentage of process completed
-        :return: None
+        :return: bool
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-    ######################################## YOUR CODE HERE ##################################################
+        # Insert the data into the table
+        cursor = self._connection.execute(f'''
+                                          INSERT INTO '{self._table_name}' (process_id, file_name, description, start_time, end_time, percentage)
+                                          VALUES (?, ?, ?, ?, ?, ?)
+                                          ;''', (process_id, file_name, description, start_time, end_time, percentage))
+
+        # Return False on error
+        if cursor.rowcount < 1:
+            print(f'Error inserting record into: \'{self._table_name}\' for file: \'{file_path}\'')
+            return False
+
+        # Commit changes
+        self._connection.commit()
+
+        return True
+
+        ### YOUR CODE HERE ###
 
     def read_all(self) -> List[Dict]:
         data = []
@@ -86,16 +133,33 @@ class DB:
 
         self._connection.commit()
 
-    def update_percentage(self, process_id, percentage):
+    def update_percentage(self, process_id, percentage) -> bool:
         """
         Update percentage in a record
 
         :param process_id: Assign an id to the process
         :param percentage: Percentage of process completed
-        :return: None
+        :return: bool
         """
-    ######################################## YOUR CODE HERE ##################################################
+        ### YOUR CODE HERE ###
 
-    ######################################## YOUR CODE HERE ##################################################
+        # Update record in db
+        cursor = self._connection.execute(f'''
+                                          UPDATE \'{self._table_name}\'
+                                          SET percentage = {percentage}
+                                          WHERE process_id = \'{process_id}\'
+                                          ;''')
+
+        # Return False on error
+        if cursor.rowcount < 1:
+            print('Error updating the percentage for the following process_id: \'{process_id}\' in table: \'{self._table_name}\'')
+            return False
+
+        # Commit changes
+        self._connection.commit()
+
+        return True
+
+        ### YOUR CODE HERE ###
 
 
