@@ -26,7 +26,7 @@ class Logger:
         ######################################## YOUR CODE HERE ##################################################
         # Add handlers to the logger and setlevel to DEBUG
         self.logger.addHandler(self.f_handler)
-        self.f_handler.setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.DEBUG)
         ######################################## YOUR CODE HERE ##################################################
 
     def warning(self, msg):
@@ -49,10 +49,6 @@ class Logger:
         self.logger.debug(msg)
         ######################################## YOUR CODE HERE ##################################################
 
-# Set root logger to debug
-logging.getLogger().setLevel(logging.DEBUG)
-
-# Create logger instances for server_logger and main_logger
 server_logger = Logger(log_file_name='server_logs.txt', module_name='server_logs')
 main_logger = Logger(log_file_name='main_logs.txt', module_name='main_logs')
 test_logger = Logger(log_file_name='test_logs.txt', module_name='test_logs')
