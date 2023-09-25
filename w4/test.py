@@ -8,6 +8,7 @@ from pprint import pprint
 from fastapi.testclient import TestClient
 from w4.server import app
 import unittest
+from w4.logger_config import test_logger
 
 
 class TestApp(unittest.TestCase):
@@ -15,11 +16,13 @@ class TestApp(unittest.TestCase):
     db = DB('db_test.sqlite')
 
     def test_health(self):
+        test_logger.info("Calling test_health()")
         response = self.client.get("/health")
         self.assertEqual(response.status_code, 200, msg='Response code should be 200')
         self.assertEqual(response.json(), {"status": "ok"}, msg='Health API check failed')
 
     def test_processes(self):
+        test_logger.info("Calling test_processes()")
         response = self.client.get("/processes")
         self.assertEqual(response.status_code, 200, msg='Response code should be 200')
         self.assertTrue(isinstance(response.json(), list), msg='Instance of processes object should be list')
@@ -35,7 +38,7 @@ class TestApp(unittest.TestCase):
                                  for process in response.json()]), msg='Missing keys')
 
     def test_db_operations(self):
-
+        test_logger.info("Calling test_db_operations()")
         example_data = [{
             'process_id': str(uuid.uuid4()),
             'start_time': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
